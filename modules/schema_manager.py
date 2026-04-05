@@ -37,7 +37,7 @@ def get_existing_table(db, table_name):
 
 def compare_schemas(existing_schema, new_schema):
     if existing_schema is None:
-        print("No existing table found. A new table will be created.")
+        # print("No existing table found. A new table will be created.")
         return "create"  # No existing table, create new one
     
     # Ignore auto-generated id column
@@ -46,10 +46,10 @@ def compare_schemas(existing_schema, new_schema):
     }
     
     if existing_schema_filtered == new_schema:
-        print("Existing table schema matches new data. Data will be appended.")
+        # print("Existing table schema matches new data. Data will be appended.")
         return "append"  # Schemas match, append data
     
-    print("Schema conflict detected.")
+    # print("Schema conflict detected.")
     return "conflict"  # Schemas do not match, potential conflict
 
 # Create table with primary key 'id'
