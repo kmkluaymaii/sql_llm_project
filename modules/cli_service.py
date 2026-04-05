@@ -50,7 +50,7 @@ if __name__ == "__main__":
         print("\nNo SQL generated.")
 
     if explanation:
-        print(f"\nExplanation: {explanation}")
+        print(f"\nExplanation: {explanation}\n")
     else:
         print("\nNo explanation provided.")
         
