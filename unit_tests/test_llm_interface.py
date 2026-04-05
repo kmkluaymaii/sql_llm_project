@@ -13,24 +13,28 @@ class TestLLMInterface(unittest.TestCase):
                 "track_popularity": "INTEGER"
             }
         }
-        self.user_query = "Get top 5 songs by Taylor Swift"
+        self.user_query = "Get top 5 songs by Sabrina Carpenter."
 
     def test_build_schema_context(self):
+        """Ensure schema context string includes correct table info."""
         schema_str = build_schema_context(self.schema_dict)
         expected_substr = "- spotify_data (track_name (TEXT), track_artist (TEXT), track_popularity (INTEGER))"
         self.assertIn(expected_substr, schema_str)
 
     def test_build_prompt_includes_query_and_schema(self):
+        """Prompt should include user query and table info."""
         prompt = build_prompt(self.user_query, self.schema_dict)
         self.assertIn(self.user_query, prompt)
         self.assertIn("spotify_data", prompt)
 
     @patch("modules.llm_interface.client.chat.completions.create")
     def test_call_llm_success(self, mock_create):
-        # Mock OpenAI response
+        """call_llm should return parsed SQL and explanation on success."""
         mock_response = MagicMock()
         mock_response.choices = [MagicMock()]
-        mock_response.choices[0].message.content = '{"sql": "SELECT * FROM spotify_data;", "explanation": "Select all tracks."}'
+        mock_response.choices[0].message.content = (
+            '{"sql": "SELECT * FROM spotify_data;", "explanation": "Select all tracks."}'
+        )
         mock_create.return_value = mock_response
 
         result = call_llm("dummy prompt")
@@ -39,6 +43,7 @@ class TestLLMInterface(unittest.TestCase):
 
     @patch("modules.llm_interface.client.chat.completions.create")
     def test_call_llm_invalid_json(self, mock_create):
+        """call_llm should handle invalid JSON gracefully."""
         mock_response = MagicMock()
         mock_response.choices = [MagicMock()]
         mock_response.choices[0].message.content = "Not JSON"
@@ -50,7 +55,7 @@ class TestLLMInterface(unittest.TestCase):
 
     @patch("modules.llm_interface.call_llm")
     def test_generate_sql_returns_expected(self, mock_call_llm):
-        # Mock call_llm
+        """generate_sql should return SQL and explanation from call_llm."""
         mock_call_llm.return_value = {
             "sql": "SELECT * FROM spotify_data;",
             "explanation": "Select all tracks."
@@ -58,6 +63,7 @@ class TestLLMInterface(unittest.TestCase):
         sql, explanation = generate_sql(self.user_query, self.schema_dict)
         self.assertEqual(sql, "SELECT * FROM spotify_data;")
         self.assertEqual(explanation, "Select all tracks.")
+
 
 if __name__ == "__main__":
     unittest.main()
