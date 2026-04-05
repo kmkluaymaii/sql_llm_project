@@ -1,6 +1,10 @@
 ## DataSheetAI Project
 A natural language to SQL pipeline that lets user query CSV file using plain English. Load a CSV, ask a question, and get back a SQL query with results
 
+This project is themed around music and movies, and comes with two sample datasets in the data folder to get started:
+- `spotify.csv` - Spotify music tracks with artist, popularity and genre
+- `movie.csv` - Movie dataset with titles, genres, ratings and starring actor/actress
+
 ### System Overview
 This project converts CSV files into a SQLite databse, uses an LLM to convert natural language questions into SQL queries, validates and executes those queries, and returns results via a CLI interface
 
